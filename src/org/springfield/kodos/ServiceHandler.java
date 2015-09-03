@@ -55,14 +55,14 @@ public class ServiceHandler implements ServiceInterface {
 	}
 	
 	public String get(String uri,String fsxml,String mimetype) {
-		System.out.println("KODOS GET="+uri);
+		//System.out.println("KODOS GET="+uri);
 		int pos = uri.indexOf("(");
 		if (pos!=-1) {
 			String command = uri.substring(0,pos);
 			String values = uri.substring(pos+1);
 			values = values.substring(0,values.length()-1);
 			String[] params = values.split(",");
-			System.out.println("GET COMMAND="+command+" VALUES="+values);
+			//System.out.println("GET COMMAND="+command+" VALUES="+values);
 			return handleGetCommand(command,params);
 		}
 		return null;
@@ -83,7 +83,9 @@ public class ServiceHandler implements ServiceInterface {
 	}
 	
 	private String handlePutCommand(String command,String[] params,String value) {
-	//	if (command.equals("setpassword")) return setPassword(params[0],params[1],value); 
+		String[] cmds = command.substring(1).split("/");
+		String project = cmds[0];
+		if (project.equals("mecanex")) return MecanexHandler.put(cmds,params,value);
 		return null;
 	}
 	
@@ -92,23 +94,6 @@ public class ServiceHandler implements ServiceInterface {
 		String[] cmds = command.substring(1).split("/");
 		String project = cmds[0];
 		if (project.equals("mecanex")) return MecanexHandler.get(cmds,params);
-		
-		
-		/*
-		if (command.equals("login")) return checkLogin(params[0],params[1],params[2]);
-		if (command.equals("createaccount")) return createAccount(params[0],params[1],params[2],params[3]);
-		if (command.equals("userexists")) return userExists(params[0],params[1]);
-		if (command.equals("validemail")) return validEmail(params[0],params[1]);
-		if (command.equals("bartallowed")) return AllowedDomainChecker.bartChecker(params);
-		if (command.equals("userallowed")) return AllowedDomainChecker.checkAllowedUser(params);
-		if (command.equals("applicationallowed")) return AllowedDomainChecker.checkAllowedApplication(params);
-		if (command.equals("approvedaccountname")) return approvedAccountName(params[0],params[1]);
-		if (command.equals("passwordquality")) return passwordQuality(params[0],params[1]);
-		if (command.equals("sendsignupmail")) return sendSignupMail(params[0],params[1],params[2],params[3]); 
-		if (command.equals("tryconfirmaccount")) return tryConfirmAccount(params[0],params[1],params[2]); 
-		if (command.equals("getserviceauth")) return getServiceAuth(params[0]);
-		if (command.equals("valid_spw")) return checkValidSPW(params[0]);
-		*/
 		return null;
 	}
 	
