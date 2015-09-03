@@ -29,6 +29,7 @@ import java.security.SecureRandom;
 import org.springfield.fs.Fs;
 import org.springfield.fs.FsNode;
 import org.springfield.kodos.homer.*;
+import org.springfield.kodos.mecanex.workflow.MecanexHandler;
 import org.springfield.mojo.interfaces.*;
 
 public class ServiceHandler implements ServiceInterface {
@@ -43,10 +44,6 @@ public class ServiceHandler implements ServiceInterface {
 	
 	public ServiceHandler() {
 		  System.out.println("KODOS SERVICE HANDLER STARTED");
-  //      SecureRandom random = new SecureRandom();
-   //     byte[] tpw = new byte[24];
-     //   random.nextBytes(tpw);        
-   //     spw = toHex(tpw);
 	}
 	
 	public static ServiceHandler instance() {
@@ -58,28 +55,28 @@ public class ServiceHandler implements ServiceInterface {
 	}
 	
 	public String get(String uri,String fsxml,String mimetype) {
-		//System.out.println("KODOS GET="+uri);
+		System.out.println("KODOS GET="+uri);
 		int pos = uri.indexOf("(");
 		if (pos!=-1) {
 			String command = uri.substring(0,pos);
 			String values = uri.substring(pos+1);
 			values = values.substring(0,values.length()-1);
 			String[] params = values.split(",");
-			//System.out.println("COMMAND="+command+" VALUES="+values);
+			System.out.println("GET COMMAND="+command+" VALUES="+values);
 			return handleGetCommand(command,params);
 		}
 		return null;
 	}
 	
 	public String put(String uri,String value,String mimetype) {
-		//System.out.println("KODOS PUT="+uri);
+		System.out.println("KODOS PUT="+uri);
 		int pos = uri.indexOf("(");
 		if (pos!=-1) {
 			String command = uri.substring(0,pos);
 			String values = uri.substring(pos+1);
 			values = values.substring(0,values.length()-1);
 			String[] params = values.split(",");
-			//System.out.println("COMMAND="+command+" VALUES="+values);
+			System.out.println("PUT COMMAND="+command+" PARAMS="+values+" MIMETYPE="+mimetype+" VALUE="+value);
 			return handlePutCommand(command,params,value);
 		}
 		return null;
@@ -91,6 +88,12 @@ public class ServiceHandler implements ServiceInterface {
 	}
 	
 	private String handleGetCommand(String command,String[] params) {
+		//  /mecanex/home/list
+		String[] cmds = command.substring(1).split("/");
+		String project = cmds[0];
+		if (project.equals("mecanex")) return MecanexHandler.get(cmds,params);
+		
+		
 		/*
 		if (command.equals("login")) return checkLogin(params[0],params[1],params[2]);
 		if (command.equals("createaccount")) return createAccount(params[0],params[1],params[2],params[3]);
